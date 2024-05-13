@@ -1,4 +1,4 @@
-module github.com/diploma/protos
+module github.com/missbulochka/protos
 
 go 1.21.3
 
