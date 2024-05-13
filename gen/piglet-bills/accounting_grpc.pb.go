@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.19.6
-// source: api/proto/accounting.proto
+// source: piglet-bills/accounting.proto
 
 package billsv1
 
@@ -354,5 +354,5 @@ var PigletBills_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/proto/accounting.proto",
+	Metadata: "piglet-bills/accounting.proto",
 }
