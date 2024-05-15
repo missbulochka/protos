@@ -8,7 +8,7 @@ option go_package = "protos/gen/piglet-transactions;transv1";
 
 service PigletTransactions {
   rpc CreateTransaction (CreateTransactionRequest) returns (TransactionResponse);
-  rpc UpdateTransaction (UpdateTransactionRequest) returns (TransactionResponse);
+  rpc UpdateTransaction (Transaction) returns (TransactionResponse);
   rpc DeleteTransaction (IdRequest) returns (SuccessResponse);
   rpc GetTransaction (IdRequest) returns (TransactionResponse);
   rpc GetAllTransactions (EmptyRequest) returns (GetAllTransactionsResponse);
@@ -23,19 +23,6 @@ service PigletTransactions {
 message CreateTransactionRequest {
   google.protobuf.Timestamp date = 1;
   int32 transType = 2;
-  float sum = 3;
-  string comment = 4;
-  string idCategory = 5;
-  bool debtType = 6;
-  string idBillTo = 7;
-  string idBillFrom = 8;
-  string person = 9;
-  bool repeat = 10;
-}
-
-message UpdateTransactionRequest {
-  string id = 1;
-  google.protobuf.Timestamp date = 2;
   float sum = 3;
   string comment = 4;
   string idCategory = 5;

@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PigletTransactionsClient interface {
 	CreateTransaction(ctx context.Context, in *CreateTransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
-	UpdateTransaction(ctx context.Context, in *UpdateTransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
+	UpdateTransaction(ctx context.Context, in *Transaction, opts ...grpc.CallOption) (*TransactionResponse, error)
 	DeleteTransaction(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	GetTransaction(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
 	GetAllTransactions(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*GetAllTransactionsResponse, error)
@@ -51,7 +51,7 @@ func (c *pigletTransactionsClient) CreateTransaction(ctx context.Context, in *Cr
 	return out, nil
 }
 
-func (c *pigletTransactionsClient) UpdateTransaction(ctx context.Context, in *UpdateTransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error) {
+func (c *pigletTransactionsClient) UpdateTransaction(ctx context.Context, in *Transaction, opts ...grpc.CallOption) (*TransactionResponse, error) {
 	out := new(TransactionResponse)
 	err := c.cc.Invoke(ctx, "/transactions.PigletTransactions/UpdateTransaction", in, out, opts...)
 	if err != nil {
@@ -137,7 +137,7 @@ func (c *pigletTransactionsClient) DeleteCategory(ctx context.Context, in *IdReq
 // for forward compatibility
 type PigletTransactionsServer interface {
 	CreateTransaction(context.Context, *CreateTransactionRequest) (*TransactionResponse, error)
-	UpdateTransaction(context.Context, *UpdateTransactionRequest) (*TransactionResponse, error)
+	UpdateTransaction(context.Context, *Transaction) (*TransactionResponse, error)
 	DeleteTransaction(context.Context, *IdRequest) (*SuccessResponse, error)
 	GetTransaction(context.Context, *IdRequest) (*TransactionResponse, error)
 	GetAllTransactions(context.Context, *EmptyRequest) (*GetAllTransactionsResponse, error)
@@ -156,7 +156,7 @@ type UnimplementedPigletTransactionsServer struct {
 func (UnimplementedPigletTransactionsServer) CreateTransaction(context.Context, *CreateTransactionRequest) (*TransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTransaction not implemented")
 }
-func (UnimplementedPigletTransactionsServer) UpdateTransaction(context.Context, *UpdateTransactionRequest) (*TransactionResponse, error) {
+func (UnimplementedPigletTransactionsServer) UpdateTransaction(context.Context, *Transaction) (*TransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTransaction not implemented")
 }
 func (UnimplementedPigletTransactionsServer) DeleteTransaction(context.Context, *IdRequest) (*SuccessResponse, error) {
@@ -215,7 +215,7 @@ func _PigletTransactions_CreateTransaction_Handler(srv interface{}, ctx context.
 }
 
 func _PigletTransactions_UpdateTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateTransactionRequest)
+	in := new(Transaction)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -227,7 +227,7 @@ func _PigletTransactions_UpdateTransaction_Handler(srv interface{}, ctx context.
 		FullMethod: "/transactions.PigletTransactions/UpdateTransaction",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PigletTransactionsServer).UpdateTransaction(ctx, req.(*UpdateTransactionRequest))
+		return srv.(PigletTransactionsServer).UpdateTransaction(ctx, req.(*Transaction))
 	}
 	return interceptor(ctx, in, info, handler)
 }
