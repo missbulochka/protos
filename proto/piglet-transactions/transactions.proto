@@ -94,4 +94,5 @@ message Category {
 message Bill {
   string id = 1;
   bool billStatus = 2;
+  bool deletion = 3;
 }
