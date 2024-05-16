@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -27,6 +28,7 @@ type PigletTransactionsClient interface {
 	DeleteTransaction(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	GetTransaction(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
 	GetAllTransactions(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*GetAllTransactionsResponse, error)
+	AddBill(ctx context.Context, in *Bill, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*CategoryResponse, error)
 	UpdateCategory(ctx context.Context, in *Category, opts ...grpc.CallOption) (*CategoryResponse, error)
 	GetCategory(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*CategoryResponse, error)
@@ -87,6 +89,15 @@ func (c *pigletTransactionsClient) GetAllTransactions(ctx context.Context, in *E
 	return out, nil
 }
 
+func (c *pigletTransactionsClient) AddBill(ctx context.Context, in *Bill, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/transactions.PigletTransactions/AddBill", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *pigletTransactionsClient) AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*CategoryResponse, error) {
 	out := new(CategoryResponse)
 	err := c.cc.Invoke(ctx, "/transactions.PigletTransactions/AddCategory", in, out, opts...)
@@ -141,6 +152,7 @@ type PigletTransactionsServer interface {
 	DeleteTransaction(context.Context, *IdRequest) (*SuccessResponse, error)
 	GetTransaction(context.Context, *IdRequest) (*TransactionResponse, error)
 	GetAllTransactions(context.Context, *EmptyRequest) (*GetAllTransactionsResponse, error)
+	AddBill(context.Context, *Bill) (*emptypb.Empty, error)
 	AddCategory(context.Context, *AddCategoryRequest) (*CategoryResponse, error)
 	UpdateCategory(context.Context, *Category) (*CategoryResponse, error)
 	GetCategory(context.Context, *IdRequest) (*CategoryResponse, error)
@@ -167,6 +179,9 @@ func (UnimplementedPigletTransactionsServer) GetTransaction(context.Context, *Id
 }
 func (UnimplementedPigletTransactionsServer) GetAllTransactions(context.Context, *EmptyRequest) (*GetAllTransactionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllTransactions not implemented")
+}
+func (UnimplementedPigletTransactionsServer) AddBill(context.Context, *Bill) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddBill not implemented")
 }
 func (UnimplementedPigletTransactionsServer) AddCategory(context.Context, *AddCategoryRequest) (*CategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
@@ -282,6 +297,24 @@ func _PigletTransactions_GetAllTransactions_Handler(srv interface{}, ctx context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PigletTransactionsServer).GetAllTransactions(ctx, req.(*EmptyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PigletTransactions_AddBill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Bill)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PigletTransactionsServer).AddBill(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/transactions.PigletTransactions/AddBill",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PigletTransactionsServer).AddBill(ctx, req.(*Bill))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -402,6 +435,10 @@ var PigletTransactions_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllTransactions",
 			Handler:    _PigletTransactions_GetAllTransactions_Handler,
+		},
+		{
+			MethodName: "AddBill",
+			Handler:    _PigletTransactions_AddBill_Handler,
 		},
 		{
 			MethodName: "AddCategory",

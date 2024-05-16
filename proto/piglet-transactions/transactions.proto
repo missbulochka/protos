@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 package transactions;
 
@@ -12,6 +13,7 @@ service PigletTransactions {
   rpc DeleteTransaction (IdRequest) returns (SuccessResponse);
   rpc GetTransaction (IdRequest) returns (TransactionResponse);
   rpc GetAllTransactions (EmptyRequest) returns (GetAllTransactionsResponse);
+  rpc AddBill (Bill) returns (google.protobuf.Empty);
 
   rpc AddCategory (AddCategoryRequest) returns (CategoryResponse);
   rpc UpdateCategory (Category) returns (CategoryResponse);
@@ -87,4 +89,9 @@ message Category {
   bool type = 2;
   string categoryName = 3;
   bool mandatory = 4;
+}
+
+message Bill {
+  string id = 1;
+  bool billStatus = 2;
 }

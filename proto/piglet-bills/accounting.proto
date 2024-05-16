@@ -14,7 +14,6 @@ service pigletBills {
     rpc GetBill (IdRequest) returns (BillResponse);
     rpc UpdateBill (UpdateBillRequest) returns (BillResponse);
     rpc DeleteBill (IdRequest) returns (SuccessResponse);
-    rpc VerifyBill (IdRequest) returns (SuccessResponse);
     rpc FixBillSum (FixBillSumRequest) returns (google.protobuf.Empty);
 }
 

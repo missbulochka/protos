@@ -29,7 +29,6 @@ type PigletBillsClient interface {
 	GetBill(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*BillResponse, error)
 	UpdateBill(ctx context.Context, in *UpdateBillRequest, opts ...grpc.CallOption) (*BillResponse, error)
 	DeleteBill(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
-	VerifyBill(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	FixBillSum(ctx context.Context, in *FixBillSumRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -95,15 +94,6 @@ func (c *pigletBillsClient) DeleteBill(ctx context.Context, in *IdRequest, opts 
 	return out, nil
 }
 
-func (c *pigletBillsClient) VerifyBill(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
-	out := new(SuccessResponse)
-	err := c.cc.Invoke(ctx, "/accounting.pigletBills/VerifyBill", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *pigletBillsClient) FixBillSum(ctx context.Context, in *FixBillSumRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/accounting.pigletBills/FixBillSum", in, out, opts...)
@@ -123,7 +113,6 @@ type PigletBillsServer interface {
 	GetBill(context.Context, *IdRequest) (*BillResponse, error)
 	UpdateBill(context.Context, *UpdateBillRequest) (*BillResponse, error)
 	DeleteBill(context.Context, *IdRequest) (*SuccessResponse, error)
-	VerifyBill(context.Context, *IdRequest) (*SuccessResponse, error)
 	FixBillSum(context.Context, *FixBillSumRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedPigletBillsServer()
 }
@@ -149,9 +138,6 @@ func (UnimplementedPigletBillsServer) UpdateBill(context.Context, *UpdateBillReq
 }
 func (UnimplementedPigletBillsServer) DeleteBill(context.Context, *IdRequest) (*SuccessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteBill not implemented")
-}
-func (UnimplementedPigletBillsServer) VerifyBill(context.Context, *IdRequest) (*SuccessResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method VerifyBill not implemented")
 }
 func (UnimplementedPigletBillsServer) FixBillSum(context.Context, *FixBillSumRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FixBillSum not implemented")
@@ -277,24 +263,6 @@ func _PigletBills_DeleteBill_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PigletBills_VerifyBill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PigletBillsServer).VerifyBill(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/accounting.pigletBills/VerifyBill",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PigletBillsServer).VerifyBill(ctx, req.(*IdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _PigletBills_FixBillSum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(FixBillSumRequest)
 	if err := dec(in); err != nil {
@@ -343,10 +311,6 @@ var PigletBills_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteBill",
 			Handler:    _PigletBills_DeleteBill_Handler,
-		},
-		{
-			MethodName: "VerifyBill",
-			Handler:    _PigletBills_VerifyBill_Handler,
 		},
 		{
 			MethodName: "FixBillSum",
