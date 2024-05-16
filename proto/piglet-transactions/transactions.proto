@@ -13,7 +13,7 @@ service PigletTransactions {
   rpc DeleteTransaction (IdRequest) returns (SuccessResponse);
   rpc GetTransaction (IdRequest) returns (TransactionResponse);
   rpc GetAllTransactions (EmptyRequest) returns (GetAllTransactionsResponse);
-  rpc AddBill (Bill) returns (google.protobuf.Empty);
+  rpc UpdateBill (Bill) returns (google.protobuf.Empty);
 
   rpc AddCategory (AddCategoryRequest) returns (CategoryResponse);
   rpc UpdateCategory (Category) returns (CategoryResponse);

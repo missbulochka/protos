@@ -28,7 +28,7 @@ type PigletTransactionsClient interface {
 	DeleteTransaction(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	GetTransaction(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
 	GetAllTransactions(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*GetAllTransactionsResponse, error)
-	AddBill(ctx context.Context, in *Bill, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateBill(ctx context.Context, in *Bill, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*CategoryResponse, error)
 	UpdateCategory(ctx context.Context, in *Category, opts ...grpc.CallOption) (*CategoryResponse, error)
 	GetCategory(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*CategoryResponse, error)
@@ -89,9 +89,9 @@ func (c *pigletTransactionsClient) GetAllTransactions(ctx context.Context, in *E
 	return out, nil
 }
 
-func (c *pigletTransactionsClient) AddBill(ctx context.Context, in *Bill, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *pigletTransactionsClient) UpdateBill(ctx context.Context, in *Bill, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/transactions.PigletTransactions/AddBill", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/transactions.PigletTransactions/UpdateBill", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ type PigletTransactionsServer interface {
 	DeleteTransaction(context.Context, *IdRequest) (*SuccessResponse, error)
 	GetTransaction(context.Context, *IdRequest) (*TransactionResponse, error)
 	GetAllTransactions(context.Context, *EmptyRequest) (*GetAllTransactionsResponse, error)
-	AddBill(context.Context, *Bill) (*emptypb.Empty, error)
+	UpdateBill(context.Context, *Bill) (*emptypb.Empty, error)
 	AddCategory(context.Context, *AddCategoryRequest) (*CategoryResponse, error)
 	UpdateCategory(context.Context, *Category) (*CategoryResponse, error)
 	GetCategory(context.Context, *IdRequest) (*CategoryResponse, error)
@@ -180,8 +180,8 @@ func (UnimplementedPigletTransactionsServer) GetTransaction(context.Context, *Id
 func (UnimplementedPigletTransactionsServer) GetAllTransactions(context.Context, *EmptyRequest) (*GetAllTransactionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllTransactions not implemented")
 }
-func (UnimplementedPigletTransactionsServer) AddBill(context.Context, *Bill) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddBill not implemented")
+func (UnimplementedPigletTransactionsServer) UpdateBill(context.Context, *Bill) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateBill not implemented")
 }
 func (UnimplementedPigletTransactionsServer) AddCategory(context.Context, *AddCategoryRequest) (*CategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
@@ -301,20 +301,20 @@ func _PigletTransactions_GetAllTransactions_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PigletTransactions_AddBill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PigletTransactions_UpdateBill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Bill)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PigletTransactionsServer).AddBill(ctx, in)
+		return srv.(PigletTransactionsServer).UpdateBill(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/transactions.PigletTransactions/AddBill",
+		FullMethod: "/transactions.PigletTransactions/UpdateBill",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PigletTransactionsServer).AddBill(ctx, req.(*Bill))
+		return srv.(PigletTransactionsServer).UpdateBill(ctx, req.(*Bill))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -437,8 +437,8 @@ var PigletTransactions_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _PigletTransactions_GetAllTransactions_Handler,
 		},
 		{
-			MethodName: "AddBill",
-			Handler:    _PigletTransactions_AddBill_Handler,
+			MethodName: "UpdateBill",
+			Handler:    _PigletTransactions_UpdateBill_Handler,
 		},
 		{
 			MethodName: "AddCategory",
