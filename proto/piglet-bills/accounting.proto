@@ -1,48 +1,71 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
-import "google/protobuf/empty.proto";
-
 package accounting;
 
 option go_package = "protos/gen/piglet-bills;billsv1";
 
-service pigletBills {
-    rpc CreateBill (CreateBillRequest) returns (BillResponse);
-    rpc GetAllAccounts (GetSomeBillsRequest) returns (GetSomeBillsResponse);
-    rpc GetAllGoals (GetSomeBillsRequest) returns (GetSomeBillsResponse);
-    rpc GetBill (IdRequest) returns (BillResponse);
-    rpc UpdateBill (UpdateBillRequest) returns (BillResponse);
-    rpc DeleteBill (IdRequest) returns (SuccessResponse);
-    rpc FixBillSum (FixBillSumRequest) returns (google.protobuf.Empty);
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+service PigletBills {
+    rpc CreateBill (CreateBillRequest) returns (BillResponse) {
+        option (google.api.http) = {
+            post: "/piglet/bills/create"
+            body: "*"
+        };
+    }
+    rpc GetAllAccounts (google.protobuf.Empty) returns (GetSomeBillsResponse) {
+        option (google.api.http) = {
+            get: "/piglet/bills/accounts"
+        };
+    }
+    rpc GetAllGoals (google.protobuf.Empty) returns (GetSomeBillsResponse) {
+        option (google.api.http) = {
+            get: "/piglet/bills/goals"
+        };
+    }
+    rpc GetBill (IdRequest) returns (BillResponse) {
+        option (google.api.http) = {
+            get: "/piglet/bills/{id}"
+        };
+    }
+    rpc UpdateBill (UpdateBillRequest) returns (BillResponse) {
+        option (google.api.http) = {
+            put: "/piglet/bills/{id}"
+            body: "*"
+        };
+    }
+    rpc DeleteBill (IdRequest) returns (SuccessResponse) {
+        option (google.api.http) = {
+            delete: "/piglet/bills/{id}"
+        };
+    }
+    rpc FixBillSum (FixBillSumRequest) returns (google.protobuf.Empty); // No REST annotation
 }
 
 message Bill {
     string id = 1;
-    bool billType = 2;
-    bool billStatus = 3;
+    bool billType = 2; // true for account, false for goal
+    bool billStatus = 3; // true for active, false for inactive
     string billName = 4;
-    float currentSum = 5;
-    reserved 6;
-    float goalSum = 7;
-    google.protobuf.Timestamp date = 8;
-    fixed32 monthlyPayment = 9;
+    double currentSum = 5;
+    reserved 6; // will be currency
+    double goalSum = 7; // use only if billType is goal
+    google.protobuf.Timestamp date = 8; // use only if billType is goal
+    fixed32 monthlyPayment = 9; // use only if billType is goal
 }
 
 message CreateBillRequest {
-    bool billType = 1;
+    bool billType = 1; // true for account, false for goal
     string billName = 2;
-    reserved 3;
-    float goalSum = 4;
-    google.protobuf.Timestamp date = 5;
+    reserved 3; // will be currency
+    double goalSum = 4; // use only if billType is goal
+    google.protobuf.Timestamp date = 5; // use only if billType is goal
 }
 
 message BillResponse {
     Bill bill = 1;
-}
-
-message GetSomeBillsRequest {
-
 }
 
 message GetSomeBillsResponse {
@@ -52,11 +75,11 @@ message GetSomeBillsResponse {
 message UpdateBillRequest {
     string id = 1;
     string billName = 2;
-    float currentSum = 3;
-    reserved 4;
-    bool billStatus = 5;
-    float goalSum = 6;
-    google.protobuf.Timestamp date = 7;
+    double currentSum = 3;
+    reserved 4; // will be currency
+    bool billStatus = 5; // true for active, false for inactive
+    double goalSum = 6; // use only if billType is goal
+    google.protobuf.Timestamp date = 7; // use only if billType is goal
 }
 
 message IdRequest {
@@ -69,5 +92,5 @@ message SuccessResponse {
 
 message FixBillSumRequest {
     string id = 1;
-    float sum = 2;
+    double sum = 2;
 }

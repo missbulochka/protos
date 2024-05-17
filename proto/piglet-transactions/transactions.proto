@@ -2,37 +2,82 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
 
 package transactions;
 
 option go_package = "protos/gen/piglet-transactions;transv1";
 
 service PigletTransactions {
-  rpc CreateTransaction (CreateTransactionRequest) returns (TransactionResponse);
-  rpc UpdateTransaction (Transaction) returns (TransactionResponse);
-  rpc DeleteTransaction (IdRequest) returns (SuccessResponse);
-  rpc GetTransaction (IdRequest) returns (TransactionResponse);
-  rpc GetAllTransactions (EmptyRequest) returns (GetAllTransactionsResponse);
-  rpc UpdateBill (Bill) returns (google.protobuf.Empty);
+  rpc CreateTransaction (CreateTransactionRequest) returns (TransactionResponse) {
+    option (google.api.http) = {
+      post: "/piglet/transactions/create"
+      body: "*"
+    };
+  }
+  rpc UpdateTransaction (Transaction) returns (TransactionResponse) {
+    option (google.api.http) = {
+      put: "/piglet/transactions/{id}"
+      body: "*"
+    };
+  }
+  rpc DeleteTransaction (IdRequest) returns (SuccessResponse) {
+    option (google.api.http) = {
+      delete: "/piglet/transactions/{id}"
+    };
+  }
+  rpc GetTransaction (IdRequest) returns (TransactionResponse) {
+    option (google.api.http) = {
+      get: "/piglet/transactions/{id}"
+    };
+  }
+  rpc GetAllTransactions (google.protobuf.Empty) returns (GetAllTransactionsResponse) {
+    option (google.api.http) = {
+      get: "/piglet/transactions/all"
+    };
+  }
+  rpc UpdateBill (Bill) returns (google.protobuf.Empty); // No REST annotation
 
-  rpc AddCategory (AddCategoryRequest) returns (CategoryResponse);
-  rpc UpdateCategory (Category) returns (CategoryResponse);
-  rpc GetCategory (IdRequest) returns (CategoryResponse);
-  rpc GetAllCategories (EmptyRequest) returns (GetAllCategoriesResponse);
-  rpc DeleteCategory (IdRequest) returns (SuccessResponse);
+  rpc AddCategory (AddCategoryRequest) returns (CategoryResponse) {
+    option (google.api.http) = {
+      post: "/piglet/categories/create"
+      body: "*"
+    };
+  }
+  rpc UpdateCategory (Category) returns (CategoryResponse) {
+    option (google.api.http) = {
+      put: "/piglet/categories/{id}"
+      body: "*"
+    };
+  }
+  rpc GetCategory (IdRequest) returns (CategoryResponse) {
+    option (google.api.http) = {
+      get: "/piglet/categories/{id}"
+    };
+  }
+  rpc GetAllCategories (google.protobuf.Empty) returns (GetAllCategoriesResponse) {
+    option (google.api.http) = {
+      get: "/piglet/categories/all"
+    };
+  }
+  rpc DeleteCategory (IdRequest) returns (SuccessResponse) {
+    option (google.api.http) = {
+      delete: "/piglet/categories/{id}"
+    };
+  }
 }
 
 message CreateTransactionRequest {
   google.protobuf.Timestamp date = 1;
-  int32 transType = 2;
-  float sum = 3;
-  string comment = 4;
+  int32 transType = 2; // 1 for income, 2 for expense, 3 for debt, 4 for transfer
+  double sum = 3;
+  string comment = 4; // optional comment
   string idCategory = 5;
-  bool debtType = 6;
+  bool debtType = 6; // true for debtor (долгодатель) false for creditor (должник)
   string idBillTo = 7;
   string idBillFrom = 8;
-  string person = 9;
-  bool repeat = 10;
+  string person = 9; // optional name for sender/recipient/creditor/debtor
+  bool repeat = 10; // true for repeated transaction
 }
 
 message GetAllTransactionsResponse {
@@ -40,9 +85,9 @@ message GetAllTransactionsResponse {
 }
 
 message AddCategoryRequest {
-  bool type = 1;
+  bool type = 1; // true for expense false for income
   string name = 2;
-  bool mandatory = 3;
+  bool mandatory = 3; // true for mandatory transaction
 }
 
 message GetAllCategoriesResponse {
@@ -52,10 +97,6 @@ message GetAllCategoriesResponse {
 
 message IdRequest {
   string id = 1;
-}
-
-message EmptyRequest {
-
 }
 
 message TransactionResponse {
@@ -72,27 +113,27 @@ message CategoryResponse {
 
 message Transaction {
   string id = 1;
-  google.protobuf.Timestamp date = 2;
+  google.protobuf.Timestamp date = 2; // 1 for income, 2 for expense, 3 for debt, 4 for transfer
   int32 transType = 3;
-  float sum = 4;
-  string comment = 5;
+  double sum = 4;
+  string comment = 5; // optional comment
   string idCategory = 6;
-  bool debtType = 7;
+  bool debtType = 7; // true for debtor (долгодатель) false for creditor (должник)
   string idBillTo = 8;
   string idBillFrom = 9;
-  string person = 10;
-  bool repeat = 11;
+  string person = 10; // optional name for sender/recipient/creditor/debtor
+  bool repeat = 11; // true for repeated transaction
 }
 
 message Category {
   string id = 1;
-  bool type = 2;
+  bool type = 2; // true for expense false for income
   string categoryName = 3;
-  bool mandatory = 4;
+  bool mandatory = 4; // true for mandatory transaction
 }
 
 message Bill {
   string id = 1;
-  bool billStatus = 2;
-  bool deletion = 3;
+  bool billStatus = 2; // true for active, false for inactive
+  bool deletion = 3; // flag for deleting the bill
 }
