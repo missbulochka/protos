@@ -1,0 +1,334 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "piglet-bills/accounting.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "PigletBills"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/piglet/bills/accounts": {
+      "get": {
+        "operationId": "PigletBills_GetAllAccounts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accountingGetSomeBillsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "PigletBills"
+        ]
+      }
+    },
+    "/piglet/bills/create": {
+      "post": {
+        "operationId": "PigletBills_CreateBill",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accountingBillResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/accountingCreateBillRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PigletBills"
+        ]
+      }
+    },
+    "/piglet/bills/goals": {
+      "get": {
+        "operationId": "PigletBills_GetAllGoals",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accountingGetSomeBillsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "PigletBills"
+        ]
+      }
+    },
+    "/piglet/bills/{id}": {
+      "get": {
+        "operationId": "PigletBills_GetBill",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accountingBillResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PigletBills"
+        ]
+      },
+      "delete": {
+        "operationId": "PigletBills_DeleteBill",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accountingSuccessResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PigletBills"
+        ]
+      },
+      "put": {
+        "operationId": "PigletBills_UpdateBill",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/accountingBillResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PigletBillsUpdateBillBody"
+            }
+          }
+        ],
+        "tags": [
+          "PigletBills"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "PigletBillsUpdateBillBody": {
+      "type": "object",
+      "properties": {
+        "billName": {
+          "type": "string"
+        },
+        "currentSum": {
+          "type": "number",
+          "format": "double"
+        },
+        "billStatus": {
+          "type": "boolean",
+          "title": "true for active, false for inactive"
+        },
+        "goalSum": {
+          "type": "number",
+          "format": "double",
+          "title": "use only if billType is goal"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "title": "use only if billType is goal"
+        }
+      }
+    },
+    "accountingBill": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "billType": {
+          "type": "boolean",
+          "title": "true for account, false for goal"
+        },
+        "billStatus": {
+          "type": "boolean",
+          "title": "true for active, false for inactive"
+        },
+        "billName": {
+          "type": "string"
+        },
+        "currentSum": {
+          "type": "number",
+          "format": "double"
+        },
+        "goalSum": {
+          "type": "number",
+          "format": "double",
+          "title": "use only if billType is goal"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "title": "use only if billType is goal"
+        },
+        "monthlyPayment": {
+          "type": "integer",
+          "format": "int64",
+          "title": "use only if billType is goal"
+        }
+      }
+    },
+    "accountingBillResponse": {
+      "type": "object",
+      "properties": {
+        "bill": {
+          "$ref": "#/definitions/accountingBill"
+        }
+      }
+    },
+    "accountingCreateBillRequest": {
+      "type": "object",
+      "properties": {
+        "billType": {
+          "type": "boolean",
+          "title": "true for account, false for goal"
+        },
+        "billName": {
+          "type": "string"
+        },
+        "goalSum": {
+          "type": "number",
+          "format": "double",
+          "title": "use only if billType is goal"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "title": "use only if billType is goal"
+        }
+      }
+    },
+    "accountingGetSomeBillsResponse": {
+      "type": "object",
+      "properties": {
+        "bills": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/accountingBill"
+          }
+        }
+      }
+    },
+    "accountingSuccessResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
